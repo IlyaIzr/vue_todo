@@ -2,7 +2,7 @@
   <div class="container">
     Test, id is {{list_id}}
     <br>
-    <div v-for="list_item in current_list" :key="list_item.id" class="card-text">
+    <div v-for="list_item in current_list" :key="list_item.id">
       <ul class="list-group">
         <li class="list-group-item" v-if="list_item.completed">
           <del>{{list_item.text}}</del>

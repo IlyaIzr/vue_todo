@@ -1,17 +1,18 @@
 <template>
   <div>  
-    <div v-for="list_item in list_props" :key="list_item.id" class="card-text">
-      <ul class="list-group">
-        <li class="list-group-item" v-if="list_item.completed">
+    <ul class="list-group">
+      <li class="list-group-item" v-for="list_item in list_props" :key="list_item.id">
+        <p v-if="list_item.completed">
           <del>{{list_item.text}}</del>
           <input type="checkbox" name="" id={list_item.id} checked >
-        </li>
-        <li class="list-group-item" v-else>
+        </p>
+
+        <p v-else>
           {{list_item.text}}
           <input type="checkbox" name="" id={list_item.id} >
-        </li>
-      </ul>
-    </div>
+        </p>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -22,6 +23,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  p{
+    margin: 0;
+  }
+  input{
+    margin-left: .5em;
+  }
 </style>
