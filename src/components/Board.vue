@@ -8,7 +8,7 @@
       <div class="card-body">
         <div class="text-right">
           <button type="button" class="btn btn-primary">
-            Delete
+            Удалить
           </button>
         </div>
         <To_do_item class="card-text" v-bind:list_props="demo_item[1]"/>

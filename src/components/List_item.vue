@@ -8,7 +8,7 @@
         :checked="list_item.completed"
       >
       <input 
-        type="text" name="rand_uid" id="rand_uid"
+        type="text" name="rand_uid" :id="list_item.id+'a'" 
         v-bind:class="{'crossed':list_item.completed}"
         :value=list_item.text
       >
