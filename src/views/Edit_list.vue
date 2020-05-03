@@ -1,8 +1,14 @@
 <template>
   <div class="container">
 
+    <button type="submit" class="btn btn-dark my-2" @click="$emit('go-back', $event, all_todos)">Назад</button>
+
     <div v-for="list_item in current_list" :key="list_item.id">
-      <List_item v-bind:list_item="list_item" v-on:del-todo-line="del_todo_line"/>
+      <List_item 
+        v-bind:list_item="list_item" 
+        v-on:del-todo-line="del_todo_line"
+        v-on:switch-complete="complete_switch"
+        />
     </div>    
       
     <form class="list-group-item form-group" @submit="add_todo_line">
@@ -11,13 +17,16 @@
       <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
 
+    <button type="submit" class="btn btn-secondary my-2" @click="undo_all" title="Сбросить все изменения">Сбросить</button>
     <button type="submit" class="btn btn-info my-2" @click="$emit('add-todo', list_id, current_list)">Сохранить</button>
+    
   </div>
 </template>
 
 <script>
 import List_item from '../components/List_item.vue';
 import { v4 as uuidv4 } from 'uuid';
+//import router from '../router';
 
 export default {
   name: "Edit_list",
@@ -26,10 +35,12 @@ export default {
     const list_id = this.$route.params.id;
     const list_with_page_id = this.all_todos.find(element => element[0] == list_id);
     const current_list = list_with_page_id[1];
+    //const reserved_list = this.all_todos.find(element => element[0] == list_id)[1];
 
     return {
       list_id,
       current_list,
+      //reserved_list,
       new_line: ''
     }
   },  
@@ -50,13 +61,25 @@ export default {
         id: uuidv4()
       } 
       this.current_list = [...this.current_list, new_line_obj];
+    },      
+    complete_switch(e, id){
+      const line_index = this.current_list.findIndex(line => line.id === id);
+      this.current_list[line_index].completed = !this.current_list[line_index].completed;
     },
-    //refresh_db(){
-    //  console.log(this.current_list)
-//
+    undo_all () {
+      const retrieved_json = localStorage.getItem('todo_lists');
+      const all_todos = JSON.parse(retrieved_json);
+      const prev_state = all_todos.find(element => element[0] == this.list_id);
+      this.current_list = prev_state[1];
+      console.log("undid")
+    },
+    //go_back () {
+    //  this.undo_all();
+    //  router.push({ path: '/' })
     //}
   }
 }
+
 //__ I stored list_id, 'cause there's no way edit and create_edit would go one after another, hence they'll refresh after visiting home.
 </script>
 

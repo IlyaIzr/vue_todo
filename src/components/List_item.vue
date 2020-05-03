@@ -4,7 +4,7 @@
     <li class="list-group-item">
       <input 
         type="checkbox" name="" :id="list_item.id" 
-        v-on:change="complete_switch(list_item.id)"
+        @click="$emit('switch-complete', $event, list_item.id)"
         :checked="list_item.completed"
       >
       <input 
@@ -22,11 +22,11 @@
 export default {
   name: "List_item",
   props: ["list_item"],  
-  methods: {
-    complete_switch(){
-      this.list_item.completed = !this.list_item.completed;
-    }
-  },
+  //methods: {
+  //  complete_switch(){
+  //    this.list_item.completed = !this.list_item.completed;
+  //  }
+  //},
 }
 </script>
 

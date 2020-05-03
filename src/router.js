@@ -16,10 +16,10 @@ export default new Router ({
       path: '/edit_:id',
       name: "edit",
       component: Edit_list,
-      //props: {
-      //  default: true,
-      //  list_props: "list_props"
-      //}
+      props: {
+        default: true,
+        list_props: "list_props"
+      }
     }
   ]
 })
