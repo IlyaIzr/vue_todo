@@ -1,36 +1,39 @@
 <template>
   <div class="container">
-    Test, id is {{list_id}}
     <br>
-    <div v-for="list_item in current_list" :key="list_item.id">
-      <ul class="list-group">
-        <li class="list-group-item" v-if="list_item.completed">
-          <del>{{list_item.text}}</del>
-          <input type="checkbox" name="" id={list_item.id} checked >
-        </li>
-        <li class="list-group-item" v-else>
-          {{list_item.text}}
-          <input type="checkbox" name="" id={list_item.id} >
-        </li>
-      </ul>
-    </div>
+      <div v-for="list_item in current_list" :key="list_item.id">
+
+        <List_item v-bind:list_item="list_item" v-on:del-todo-line="del_todo_line"/>
+
+      </div>
   </div>
 </template>
 
 <script>
+import List_item from '../components/List_item.vue';
 
 export default {
   name: "Edit_list",
+  props: ["all_todos"],
   data() {
+    const list_id = this.$route.params.id;
+    const list_with_page_id = this.all_todos.find(element => element[0] == list_id);
+    const current_list = list_with_page_id[1];
+
     return {
-      list_id: this.$route.params.id
+      list_id,
+      current_list
     }
   },  
-  props: ["all_todos"],
-  computed: {
-    current_list: function () {    
-      const list_with_page_id = this.all_todos.find(element => element[0] == this.list_id);
-      return list_with_page_id[1];
+  components: {
+    List_item
+  },
+  methods: {
+    del_todo_line(id) {
+      console.log(this.current_list)
+      const current_list = this.current_list.filter(list_item => list_item.id !== id);
+      console.log(current_list)
+      this.current_list = current_list;
     }
   }
 }
@@ -38,5 +41,4 @@ export default {
 </script>
 
 <style>
-
 </style>

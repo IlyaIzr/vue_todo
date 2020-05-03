@@ -2,7 +2,7 @@
   <div id="app" class="container my-3">
     <router-link to='/' exact>Home</router-link>
 
-    <router-view v-bind:all_todos="all_todos"/>
+    <router-view v-bind:all_todos="all_todos" />
   </div>
 </template>
 
