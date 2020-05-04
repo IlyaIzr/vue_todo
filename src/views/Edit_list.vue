@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <button type="submit" class="btn btn-dark my-2" @click="$emit('go-back', $event, all_todos)">Назад</button>
+    <button type="submit" class="btn btn-dark my-2" @click="go_back">Назад</button>
 
     <div v-for="list_item in current_list" :key="list_item.id">
       <List_item 
@@ -11,7 +11,7 @@
         />
     </div>    
       
-    <form class="list-group-item form-group" @submit="add_todo_line">
+    <form class="list-group-item form-group" @submit.prevent="add_todo_line">
       <input type="text" class="form-control" name="new_line" placeholder="Добавьте новое дело"
         v-model="new_line" required>
       <button type="submit" class="btn btn-primary">Добавить</button>
@@ -26,7 +26,7 @@
 <script>
 import List_item from '../components/List_item.vue';
 import { v4 as uuidv4 } from 'uuid';
-//import router from '../router';
+import router from '../router';
 
 export default {
   name: "Edit_list",
@@ -52,9 +52,7 @@ export default {
       const current_list = this.current_list.filter(list_item => list_item.id !== id);
       this.current_list = current_list;
     },
-    add_todo_line(event) {
-      event.preventDefault();
-      
+    add_todo_line() {
       const new_line_obj = {
         text: this.new_line,
         completed: false,
@@ -71,12 +69,10 @@ export default {
       const all_todos = JSON.parse(retrieved_json);
       const prev_state = all_todos.find(element => element[0] == this.list_id);
       this.current_list = prev_state[1];
-      console.log("undid")
     },
-    //go_back () {
-    //  this.undo_all();
-    //  router.push({ path: '/' })
-    //}
+    go_back () {
+      router.push({ path: '/' })
+    }
   }
 }
 
