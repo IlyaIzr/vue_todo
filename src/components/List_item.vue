@@ -4,7 +4,7 @@
     <li class="list-group-item">
       <input 
         type="checkbox" name="" :id="list_item.id" 
-        @click="$emit('switch-complete', $event, list_item.id)"
+        @click="$emit('switch-complete', list_item.id)"
         :checked="list_item.completed"
       >
       <input 

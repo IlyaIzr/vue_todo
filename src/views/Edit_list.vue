@@ -1,7 +1,13 @@
 <template>
   <div class="container">
 
-    <button type="submit" class="btn btn-dark my-2" @click="go_back">Назад</button>
+    <div class="inline">
+      <button type="submit" class="btn btn-dark my-2" @click="go_back">Назад</button>
+      <div class="text-right">
+        <button class="btn btn-info my2" @click="undo" :disabled="!canUndo">Отменить</button>
+        <button class="btn btn-info my2" @click="redo" :disabled="!canRedo">Повторить</button>
+      </div>
+    </div>
 
     <div v-for="list_item in current_list" :key="list_item.id">
       <List_item 
@@ -27,6 +33,7 @@
 import List_item from '../components/List_item.vue';
 import { v4 as uuidv4 } from 'uuid';
 import router from '../router';
+//import { session_storage } from '../storage';
 
 export default {
   name: "Edit_list",
@@ -35,13 +42,16 @@ export default {
     const list_id = this.$route.params.id;
     const list_with_page_id = this.all_todos.find(element => element[0] == list_id);
     const current_list = list_with_page_id[1];
-    //const reserved_list = this.all_todos.find(element => element[0] == list_id)[1];
+    
+    const history = [Object.assign([], current_list)];
+    const historyIndex = history.length - 1;
 
     return {
       list_id,
       current_list,
-      //reserved_list,
-      new_line: ''
+      new_line: '',
+      history,
+      historyIndex
     }
   },  
   components: {
@@ -51,6 +61,7 @@ export default {
     del_todo_line(id) {
       const current_list = this.current_list.filter(list_item => list_item.id !== id);
       this.current_list = current_list;
+      this.log(this.current_list)
     },
     add_todo_line() {
       const new_line_obj = {
@@ -59,10 +70,20 @@ export default {
         id: uuidv4()
       } 
       this.current_list = [...this.current_list, new_line_obj];
-    },      
-    complete_switch(e, id){
-      const line_index = this.current_list.findIndex(line => line.id === id);
-      this.current_list[line_index].completed = !this.current_list[line_index].completed;
+      this.new_line = '';
+      this.log(this.current_list)
+    },    
+    log: function(current_list) {
+      this.historyIndex += 1
+      this.history.splice(this.historyIndex)
+      this.history.push(Object.assign([], current_list))
+    },
+    complete_switch(id){
+      const new_list = JSON.parse(JSON.stringify(this.current_list))
+      const line_index = new_list.findIndex(line => line.id === id);
+      new_list[line_index].completed = !new_list[line_index].completed;
+      this.current_list = new_list;
+      this.log(this.current_list)
     },
     undo_all () {
       const retrieved_json = localStorage.getItem('todo_lists');
@@ -72,11 +93,38 @@ export default {
     },
     go_back () {
       router.push({ path: '/' })
+    },
+    undo () {
+      if (this.canUndo) {
+        this.historyIndex -= 1
+        this.current_list = this.history[this.historyIndex]
+      }
+    },    
+    redo () {
+      if (this.canRedo) {
+        this.historyIndex += 1
+        this.current_list = this.history[this.historyIndex]
+      }
     }
-  }
+  },
+  mounted: function () {
+  },
+  beforeUpdate: function () {
+  },
+  destroyed: function () {
+    console.log("destroyed")
+  },
+  computed: {
+    canUndo: function() {
+      return this.historyIndex > 0
+    },
+    canRedo: function() {
+      return this.history.length - 1 - this.historyIndex > 0
+    }
+  },
 }
 
-//__ I stored list_id, 'cause there's no way edit and create_edit would go one after another, hence they'll refresh after visiting home.
+
 </script>
 
 <style>

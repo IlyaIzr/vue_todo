@@ -1,16 +1,12 @@
 <template>
   <div id="app" class="container my-3">
-    <router-view v-bind:all_todos="get_todos" v-on:add-todo="refresh_db"/>
-    <div v-for="(string) in get_todos" :key="string">
-      {{string}}
-    </div>
+    <router-view v-bind:all_todos="all_todos" v-on:add-todo="refresh_db"/>    
   </div>
 </template>
 
 <script>
 import { demo_data, local_storage } from './storage.js';
 import router from './router';
-import { mapGetters, mapActions } from 'vuex';
 let all_todos;
 
 
@@ -37,7 +33,6 @@ export default {
       local_storage.setItem('todo_lists', JSON.stringify(this.all_todos));
       router.push({ path: '/' })
     },
-    ...mapActions(['fetchTodos'])
   },
   updated: function () {
     const retrieved_json = localStorage.getItem('todo_lists');
@@ -46,11 +41,7 @@ export default {
       all_todos = JSON.parse(retrieved_json);
       this.all_todos = all_todos;
     }
-  },
-  created: function (){
-    this.fetchTodos();
-  },
-  computed: mapGetters(['get_todos'])
+  }
 }
 
 </script>
