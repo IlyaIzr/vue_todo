@@ -1,6 +1,10 @@
 <template>
   <div id="app" class="container my-3">
-    <router-view v-bind:all_todos="all_todos" v-on:add-todo="refresh_db"/>    
+    <router-view 
+      v-bind:all_todos="all_todos" 
+      v-on:add-todo="refresh_db"
+      v-on:del-list="delete_list"
+      />
   </div>
 </template>
 
@@ -27,12 +31,20 @@ export default {
   },
   methods: {
     refresh_db (id, todo_lines) {
-      const untouched_todos = this.all_todos.find(element => element[0] !== id);
-      const item_to_add = [id, todo_lines]
-      this.all_todos = [untouched_todos, item_to_add];
+      const untouched_todos = this.all_todos.filter(element => element[0] !== id);
+      const item_to_add = [id, todo_lines];
+      untouched_todos.push(item_to_add);
+      this.all_todos = untouched_todos;
       local_storage.setItem('todo_lists', JSON.stringify(this.all_todos));
       router.push({ path: '/' })
     },
+    delete_list (id) {
+      console.log(id)
+      const rest_todos = this.all_todos.filter(element => element[0] !== id);
+      this.all_todos = rest_todos;
+      local_storage.setItem('todo_lists', JSON.stringify(this.all_todos));
+      router.push({ path: '/' })
+    }
   },
   updated: function () {
     const retrieved_json = localStorage.getItem('todo_lists');

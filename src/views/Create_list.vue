@@ -1,13 +1,11 @@
 <template>
   <div class="container">
-    <h2 class="btn btn-link" @click="go_back">Все заметки</h2>
+    <button type="submit" class="btn btn-dark my-2" @click="go_back">Назад</button>
     <br>
-    <div class="inline_block">
-      <button type="submit" class="btn btn-danger my-2" @click="$emit('del-list', list_id)">Удалить</button>
 
-      <button class="btn btn-info my2 ml-auto" @click="undo" :disabled="!canUndo">Отменить</button>
-      <button class="btn btn-info my2 ml-auto" @click="redo" :disabled="!canRedo">Повторить</button>
-
+    <div class="text-right">
+      <button class="btn btn-info my2" @click="undo" :disabled="!canUndo">Отменить</button>
+      <button class="btn btn-info my2" @click="redo" :disabled="!canRedo">Повторить</button>
     </div>
 
     <div v-for="list_item in current_list" :key="list_item.id">
@@ -25,36 +23,32 @@
     </form>
 
     <button type="submit" class="btn btn-secondary my-2" @click="undo_all" title="Сбросить все изменения">Сбросить</button>
-    <button type="submit" class="btn btn-info my-2" @click="$emit('add-todo', list_id, current_list)">Сохранить</button>
+    <button type="submit" class="btn btn-info my-2" @click="$emit('add-todo', new_uid, current_list)">Сохранить</button>
     
   </div>
 </template>
 
 <script>
-import List_item from '../components/List_item.vue';
 import { v4 as uuidv4 } from 'uuid';
 import router from '../router';
+import List_item from '../components/List_item.vue';
 //import { session_storage } from '../storage';
 
 export default {
-  name: "Edit_list",
-  props: ["all_todos"],
+  name: "Create_list",
   data() {
-    const list_id = this.$route.params.id;
-    const list_with_page_id = this.all_todos.find(element => element[0] == list_id);
-    const current_list = list_with_page_id[1];
+    let current_list = [];
     
     const history = [Object.assign([], current_list)];
     const historyIndex = history.length - 1;
 
     return {
-      list_id,
       current_list,
       new_line: '',
       history,
       historyIndex
     }
-  },  
+  },
   components: {
     List_item
   },
@@ -69,8 +63,10 @@ export default {
         text: this.new_line,
         completed: false,
         id: uuidv4()
-      } 
+      }
+      console.log(new_line_obj)
       this.current_list = [...this.current_list, new_line_obj];
+      console.log(this.current_list)
       this.new_line = '';
       this.log(this.current_list)
     },    
@@ -87,10 +83,9 @@ export default {
       this.log(this.current_list)
     },
     undo_all () {
-      const retrieved_json = localStorage.getItem('todo_lists');
-      const all_todos = JSON.parse(retrieved_json);
-      const prev_state = all_todos.find(element => element[0] == this.list_id);
-      this.current_list = prev_state[1];
+      this.current_list = [];
+      this.new_line = "";
+      //this.log(this.current_list)   //Undo reset. Do we need that?
     },
     go_back () {
       router.push({ path: '/' })
@@ -121,6 +116,9 @@ export default {
     },
     canRedo: function() {
       return this.history.length - 1 - this.historyIndex > 0
+    },
+    new_uid: function () {
+      return uuidv4();
     }
   },
 }
@@ -129,7 +127,4 @@ export default {
 </script>
 
 <style>
-.btn-link{
-  font-size: 2vw;
-}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>  
     <ul class="list-group">
-      <li class="list-group-item" v-for="list_item in list_props" :key="list_item.id">
+      <li class="list-group-item" v-for="list_item in list_props.slice(0, 3)" :key="list_item.id">
         <p v-if="list_item.completed">
           <del>{{list_item.text}}</del>
           <input type="checkbox" name="" id={list_item.id} checked >
