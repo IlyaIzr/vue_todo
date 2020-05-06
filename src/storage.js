@@ -4,17 +4,19 @@ export const local_storage = window.localStorage;
 export const demo_data = [
   [
     "ags2ag", [
-    {"text": "Привет", "completed": false, "id": 3},
-    {"text": "Это - список дел", "completed": true, "id": 5},
-    {"text": "Можно добавить новый список дел", "completed": true, "id": 8},
-    ]
+    {"text": "Это - список дел", "completed": false, "id": 3},
+    {"text": "Можно добавить новый", "completed": false, "id": 5},
+    {"text": "список дел", "completed": true, "id": 8},
+    ],
+    "Привет"
   ],
   [
     "uIdajsfn2", [
     {"text": "Можно редактировать имеющийся", "completed": false, "id": 3},
     {"text": "или просто удалить", "completed": true, "id": 5},
-    {"text": "и создать новый список", "completed": true, "id": 8},
-    ]
+    {"text": "и создать новый список", "completed": false, "id": 8},
+    ],
+    "Назвать"
   ],
 ]
 

@@ -43,7 +43,6 @@ export default {
     width: 50%;
     background-color: #fff;
     z-index: 999;
-    border-radius: 4px;
   }
   .modal_message{
     font-size: max(3vw, 3vh);

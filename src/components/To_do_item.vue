@@ -30,4 +30,7 @@ export default {
   input{
     margin-left: .5em;
   }
+  *{
+    pointer-events: none;
+  }
 </style>

@@ -8,22 +8,30 @@
       <button class="btn btn-info my2" @click="redo" :disabled="!canRedo">Повторить</button>
     </div>
 
-    <div v-for="list_item in current_list" :key="list_item.id">
-      <List_item 
-        v-bind:list_item="list_item" 
-        v-on:del-todo-line="del_todo_line"
-        v-on:switch-complete="complete_switch"
-        />
-    </div>    
+    <div class="form-group">
       
-    <form class="list-group-item form-group" @submit.prevent="add_todo_line">
-      <input type="text" class="form-control" name="new_line" placeholder="Добавьте новое дело"
-        v-model="new_line" required>
-      <button type="submit" class="btn btn-primary">Добавить</button>
-    </form>
+      <div class="list-group-item">
+        <input type="text" class="form-control text-primary" placeholder="Название заметки (не обязательно)"
+          v-model="title">
+      </div>
+      <div v-for="list_item in current_list" :key="list_item.id">
+        <List_item 
+          v-bind:list_item="list_item" 
+          v-on:del-todo-line="del_todo_line"
+          v-on:switch-complete="complete_switch"
+          />
+      </div>
+      
+      <form class="list-group-item form-group" @submit.prevent="add_todo_line">
+        <input type="text" class="form-control text-primary" name="new_line" placeholder="Добавьте новое дело"
+          v-model="new_line" required>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+      </form>
+    
+    </div>
 
     <button type="submit" class="btn btn-secondary my-2" @click="undo_all" title="Сбросить все изменения">Сбросить</button>
-    <button type="submit" class="btn btn-info my-2" @click="$emit('add-todo', new_uid, current_list)">Сохранить</button>
+    <button type="submit" class="btn btn-info my-2" @click="$emit('add-todo', new_uid, current_list, title)">Сохранить</button>
     
   </div>
 </template>
@@ -45,6 +53,7 @@ export default {
     return {
       current_list,
       new_line: '',
+      title: '',
       history,
       historyIndex
     }

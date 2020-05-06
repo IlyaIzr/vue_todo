@@ -1,18 +1,24 @@
 <template>
   <ul class="list-group">
 
-    <li class="list-group-item">
+    <li class="list-group-item form-check">
+      
+    <div class="input-group-prepend py-1">
+      <div class="input-group-text">
+        <input 
+          type="checkbox" name="" :id="list_item.id" class="mx-2"
+          v-model="list_item.completed"
+        >
+      </div>
       <input 
-        type="checkbox" name="" :id="list_item.id" 
-        @click="$emit('switch-complete', list_item.id)"
-        :checked="list_item.completed"
-      >
-      <input 
-        type="text" name="rand_uid" :id="list_item.id+'a'" 
+        type="text" name="rand_uid" :id="list_item.id+'a'" class="form-control mx-2 text-primary"
         v-bind:class="{'crossed':list_item.completed}"
-        :value=list_item.text
+        v-model="list_item.text" 
+        required
       >
-      <button class="btn btn-danger" @click="$emit('del-todo-line', list_item.id)">x</button>
+      <button class="btn btn-danger mx-2" @click="$emit('del-todo-line', list_item.id)" title="удалить пункт">x</button>
+
+    </div>
     </li>    
 
   </ul>
@@ -21,12 +27,7 @@
 <script>
 export default {
   name: "List_item",
-  props: ["list_item"],  
-  //methods: {
-  //  complete_switch(){
-  //    this.list_item.completed = !this.list_item.completed;
-  //  }
-  //},
+  props: ["list_item"],
 }
 </script>
 
